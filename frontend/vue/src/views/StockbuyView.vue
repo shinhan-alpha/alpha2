@@ -8,10 +8,18 @@
             <!-- <select id="stockList" v-model="selected">
                 <option v-for="option in options" :value="option.price">{{ option.stock }}</option>
             </select> -->
-            <a href="./search"><img src="../../../images/search.png"></a>    
+            <a href="./search"><input v-model="stock.stockName"/></a>    
             <a @click="openModal = true"><img src="../../../images/cart.png"></a>
             <a href="#"><img src="../../../images/order.png"></a>
             <a href="#"><img src="../../../images/more.png"></a>
+        </div>
+        <div>
+            <div style="text-align: left;"><br><br>
+                <b>{{stock.currentPrice}}</b><br>
+                {{stock.preGap}}  {{stock.preRate}}%<br><br>
+                110-1231-13432 김신한<br>
+                매수가능: 0원
+            </div>
         </div>
         <!-- Modal -->
         <div id="modal-container" class="black-bg" v-if="openModal == true">
@@ -22,7 +30,25 @@
             </div>
         </div>
         <div>
-            <img src="../../../images/stockn.png">
+            <img src="../../../images/stocktab.png">
+        </div>
+        <div>
+            <img src="../../../images/stocks.png" style="left:0; position:absolute">
+            <img src="../../../images/misu.png" style="left:105px;width:220px; height:80px; position:absolute"/>
+            <div style="top:110px; left:55px; position:relative">
+                <button type="button" @click="decrementQuantity(stock)">-</button>
+                    {{ quantity }}주
+                <button type="button" @click="incrementQuantity(stock)">+</button>
+            </div>
+            <div style="top:140px; left:55px; position:relative">
+                <button type="button" @click="decrementPrice(stock)">-</button>
+                    {{ stock.currentPrice }}원
+                <button type="button" @click="incrementPrice(stock)">+</button>
+            </div>
+            <div>
+                <img src="../../../images/cartbut.png" style="top:200px;left:45px; position:relative">
+                <img src="../../../images/stockbuy.png" style="top:200px;left:55px; position:relative">
+            </div>
         </div>
 
   </div>
@@ -34,10 +60,28 @@ export default {
     data() {
     return {
       stock: this.$store.state.stock,
+      quantity:0,
     }
   },
+  methods:{
+    incrementQuantity(stock) {
+      this.quantity += 1;
+    },
+    decrementQuantity(stock) {
+      if (this.quantity > 1){
+        this.quantity -= 1;
+      }
+    },
+      incrementPrice(stock) {
+      this.stock.currentPrice += 100;
+    },
+    decrementPrice(stock) {
+      if (this.stock.currentPrice > 1){
+        this.stock.currentPrice -= 100;
+      }
+  },
   
-}
+  }}
 </script>
 
 <style scoped>

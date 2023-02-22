@@ -5,7 +5,13 @@
             <span>포트폴리오 생성</span>
         </div>
         <!-- 메인 -->
-        <div id="main">
+        <div>
+            <div class="tabs">
+                <div class="tab" @click="selectedTab = 'first'" :class="{ 'active': selectedTab === 'first' }">총자산 포트폴리오</div>
+                <div class="tab" @click="selectedTab = 'sec'" :class="{ 'active': selectedTab === 'sec' }">배당 포트폴리오</div>
+            </div>
+            <div v-if="selectedTab == 'first'">
+                <div id="main">
             <div class="main-top">
                 <span>문민제</span>님의 목표 자산 포트폴리오
                 <div class="pie-chart">
@@ -30,77 +36,144 @@
                                 </colgroup>
                             </thead>
                             <tbody>
-                                <tr v-for="(stock, index) in stocks" :key="index">
-                                    <td><input type="checkbox" v-model="stock.checked" @click="stockClick(stock)"></td>
-                                    <td>{{ stock.name }}</td>
-                                    <td><input type="text" class="percent" v-model="stock.price" placeholder="%" /></td>
-                                </tr>
-                                
+                                <tr v-for="(asset, index) in assets" :key="index">
+                                    <td>{{ asset.name }}</td>
+                                    <td><input type="text" class="percent" v-model="asset.percent" placeholder="%" /></td>
+                                </tr>                          
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div id="save" onclick="">
+                <div id="save" @click=updatePort()>
                     <span>설정 완료</span>
                 </div>
             </div>
         </div>
+            </div>
+            <div v-if="selectedTab == 'sec'">
+                <div id="main">
+            <div class="main-top">
+                <span>문민제</span>님의 배당 포트폴리오
+                <div class="pie-chart">
+                    <Pie :data="chartData" :options="options" />
+                </div>
+                <hr>
+            </div>
+             
+            <div class="main-bottom">      
+                <div>
+                    <div class="my-box">
+                     <span>월별 목표 배당금</span>
+                     <Bar :data="divchartData" :options="options"/>
+                    </div>
+
+                </div>
+                <div id="save" @click=updatePort()>
+                    <span>설정 완료</span>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+        
     </div>
 </template>
 
 <script >
-    import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-    import { Pie } from 'vue-chartjs'
+import axios from 'axios';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend,Title,BarElement,CategoryScale,LinearScale } from 'chart.js'
+import { Pie, Bar } from 'vue-chartjs'
 
-    ChartJS.register(ArcElement, Tooltip, Legend)
+ChartJS.register(ArcElement, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-    export default {
-    name: 'App',
+export default {
+    name: 'CreateView',
     components: {
-        Pie
+        Pie, Bar
     },
     data() {
         return {
-        stocks: [
-        { name: "주식", price: "1", quantity: 1, checked: false },
-        { name: "채권", price: "1", quantity: 1, checked: false },
-        { name: "실물자산", price: "1", quantity: 1, checked: false },
-        { name: "가상화폐", price: "1", quantity: 1, checked: false },
-        ],
+            assets: [
+                { name: "주식", percent: 0 },
+                { name: "채권", percent: 0 },
+                { name: "실물자산", percent: 0},
+                { name: "가상화폐", percent: 0 },
+            ],
+            selectedTab : 'first'
         }
     },
     computed:{
-        checkedStocks() {
-            if(this.stocks){
-            return this.stocks.filter(stock => stock.checked);
-            }
-            return [];
-        
-        },
         chartData() {
-            const checkedStocks = this.checkedStocks;
-            const checkedStockNames = checkedStocks.map(stock => stock.name);
-            const checkedStockPrices = checkedStocks.map(stock => Number(stock.price.replace(',', ''))*stock.quantity);
+            const assetNames = this.assets.map(asset => asset.name);
+            const assetPrices = this.assets.map(asset => Number(asset.percent));
             return {
-            labels: checkedStockNames,
-            datasets: [
-                {
-                backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-                data: checkedStockPrices
-                }
-            ],
+                labels: assetNames,
+                datasets: [
+                    {
+                    backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+                    data: assetPrices
+                    }
+                ],
             };
         },
-        },
+        divchartData() {
+    // const checkedStocks = this.checkedStocks;
+    // const checkedStockdiv = checkedStocks.map(stock => Number(dividend)*stock.quantity);
+      return{
+        labels: [ '01', '02', '03','04', '05', '06','07', '08', '09','10', '11', '12'],
+        datasets: [
+          {
+            label:'Dividend',
+            backgroundColor: '#f87979',
+            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11],
+          }
+        ]
+      }
+      }
+    },
     methods: {
-            stockClick(stock) {
-                stock.checked = true;
-            },
-            }
+        updatePort() {
+            const data = {
+                stock: Number(this.assets[0].percent),
+                bond: Number(this.assets[1].percent),
+                real_asset: Number(this.assets[2].percent),
+                crypto: Number(this.assets[3].percent),
+            };
+            const headers = { 'Authorization': `JWT ${localStorage.getItem('access_token')}` };
+            axios
+                .post("http://127.0.0.1:8000/api/portfolio/", data, { headers })
+                .then(() => {
+                    alert('포트폴리오 반영');
+                })
+                .catch((error) => {
+                    let errorMsg = "";
+                });
+        }
+    }
     }
 </script>
 
 <style scoped>
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .tab {
+    padding: 10px;
+    cursor: pointer;
+    font-size: small;
+  }
+  
+  .tab.active {
+    background-color: #ccc;
+  }
+  
+  .tab-content {
+    margin-top: 10px;
+  }
 tr:nth-child(odd) {
           background-color: #a5a5a5;
       }

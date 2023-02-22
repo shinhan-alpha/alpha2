@@ -7,6 +7,11 @@ class PortfolioSerializer(serializers.ModelSerializer):
         default = serializers.CurrentUserDefault(),
         required=False
     )
+    def validate_user(self, value):
+        if not value.is_authenticated:
+            raise serializers.ValidationError('user is required')
+        return value
+    
     class Meta:
         model=Portfolio
         fields='__all__'

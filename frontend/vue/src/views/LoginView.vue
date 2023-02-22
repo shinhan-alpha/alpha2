@@ -1,17 +1,23 @@
 <template>
-  <div class="container">
-    <div class="form-group mb-3">
-      <label for="username">아이디</label>
-      <input type="text" class="form-control" v-model="username" />
-    </div>
-    <div class="form-group mb-3">
-      <label for="password">비밀번호</label>
-      <input type="password" class="form-control" v-model="password" />
-    </div>
-    <div class="text-right">
-      <button type="button" class="btn btn-primary" @click="login">로그인</button>
-    </div>
-    <div v-if="token" id="token">{{ token }}</div>
+  <div id="login-page">
+    <div class="top">
+          <div class="logo">
+              <img src="../../../images/shinhan_ci.jpg">
+          </div>
+      </div>
+      <div class="main">
+          <h2>로그인</h2>
+          <form>
+              <input class="info" type="text" v-model="username" placeholder="아이디"><br><br>
+              <input class="info" type="password" v-model="password" placeholder="비밀번호"><br><br>
+              <input id="login" type="button" value="로그인" @click="login">
+          </form>
+      </div>
+      <div class="bottom">
+          <div class="logo">
+              <img src="../../../images/shinhan_ad.png">
+          </div>
+      </div>
   </div>
 </template>
 
@@ -35,7 +41,9 @@ export default {
         });
         localStorage.setItem("access_token", response.data.access)
         // this.token = response.data.access;
+        location.href='/'
       } catch (error) {
+        alert('로그인 실패');
         console.log(error);
       }
     },
@@ -43,6 +51,62 @@ export default {
 };
 </script>
 
-<style>
-/* Insert your CSS styles here */
+<style scoped>
+  /* top */
+  .top {
+      text-align: center;
+      margin-top: 10vh;
+      display: table;
+  }
+  .logo img {
+      max-width: 100%;
+      max-height: 100%;
+  }
+
+  /* main */
+  .main {
+      top: 30%;
+      width: 100%;
+      text-align: center;
+      background-color: #E8F1FE;
+      border-radius: 20px;
+      padding-top: 1vh;
+      padding-bottom: 1vh;
+  }
+  .main h2 {
+      text-align: left;
+      padding-left: 5vh;
+      margin-bottom: 0;
+      color: #478BE1;
+  }
+  .main form {
+      border-radius: 20px;
+      padding: 10vw;
+  }
+  .main form input {
+      width: 100%;
+      height: 25px;
+      font: 20px;
+      background-color: #E8F1FE;
+  }
+  .main .info {
+      border-top: 0px;
+      border-right: 0px;
+      border-left: 0px;
+      border-bottom-style: #D3D6D9;
+  }
+  #login {
+      border: none;
+      background-color: #478BE1;
+      color: white;
+      border-radius: 20px;
+      height: 7vh;
+  }
+
+  /* bottom */
+  .bottom {
+      text-align: center;
+      display: table;
+      margin-top: 57px;
+  }
 </style>

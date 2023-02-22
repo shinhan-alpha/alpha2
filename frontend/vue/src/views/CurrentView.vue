@@ -30,10 +30,11 @@
                 </div>
               </div>
           </div>
+          <!-- Modal -->
           <div>
-            <div style="text-align: left;">
-                {{stock.currentPrice}}<br>
-                {{stock.preGap}}  {{stock.preRate}}%
+            <div style="text-align: left;"><br><br>
+                <b>{{stock.currentPrice}}</b><br>
+                {{stock.preGap}}  {{stock.preRate}}%<br><br>
             </div>
             <div>
                 <div class="tabs">
@@ -44,11 +45,14 @@
                     <div class="tab" @click="selectedTab = 'fifth'" :class="{ 'active': selectedTab === 'fifth' }">거래원</div>
                 </div>
                 <div v-if="selectedTab == 'first'">
-                  <div class="container">
+                  <div>
+                    <img src="../../../images/cur.png" style="width:304px; height: 350px;object-fit:cover"/>
+                  </div>
+                  <!-- <div class="container">
                     <div class="box" v-for="(item, index) in items" :key="index">
                       {{ item }}
                     </div>
-                  </div>
+                  </div> -->
                 </div>
                 <div v-if="selectedTab == 'sec'">
                     <div ref="chart"></div>
