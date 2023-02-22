@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base target="_top" />
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css" />
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="notice"></div>
+      <form id="input_form">
+        <table width="400" height="100%">
+          <tr>
+            <th>종목명</th>
+            <td>
+              <input type="text" v-model="stockName" width="100%" />
+            </td>
+          </tr>
+          <tr>
+            <th>종목코드</th>
+            <td>
+              <input type="text" v-model="stockCode" size="6" />
+            </td>
+          </tr>
+          <tr>
+            <th>주가정보</th>
+            <td>
+              <div>시장: : {{ market }}</div>
+              <div>주가: {{ stockPrice }}</div>
+              <div>전일비: {{ changes }}</div>
+              <div>등락률: {{ changepct }}</div>
+              <div>시간: {{ stockTime }}</div>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          stockName: "",
+          stockCode: "",
+          market: "",
+          stockPrice: "",
+          changes: "",
+          changepct: "",
+          stockTime: "",
+          searchRequest: null,
+        },
+        watch: {
+          stockName: function (val) {
+            this.getStockInfo(val);
+          },
+        },
+        methods: {
+          getStockInfo: function (stockName) {
+            if (this.searchRequest) {
+              this.searchRequest.abort();
+            }
+            this.searchRequest = $.ajax({
+              url: "http://www.sedaily.com/Stock/Quote/JsonSearchData",
+              type: "get",
+              data: { text: stockName },
+              success: (data) => {
+                if (data.Items.length > 0) {
+                  const item = data.Items[0];
+                  this.market = item.Market === "1" ? "코스피" : "코스닥";
+                  this.stockCode = item.StockCode;
+                  this.stockPrice = item.CurrentPrice;
+                  this.changes = item.PreGap;
+                  this.changepct = item.PreRate;
+                  this.stockTime = item.StockTime;
+                }
+              },
+              dataType: "json",
+            });
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
