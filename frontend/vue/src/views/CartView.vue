@@ -47,13 +47,15 @@
       </div>
       <div v-else-if="selectedTab == 'third'">
         <div style="display:inline-block; width:100px">
+          <b>보유 포트폴리오</b>
           <Pie :data="chartData" :options="options"/>
         </div>
         <div style="display:inline-block; width:100px">
-          주식
+          <b>ㅁㄴㅇㄹ</b>
         </div>
         <div style="display:inline-block; width:100px">
-          <Pie :data="chartData" :options="options"/>
+          <b>목표 포트폴리오</b>
+          <Pie :data="updatePort" :options="options"/>
         </div>
       </div>
       <button type="button" @click="add" style="background-color:white">
@@ -94,6 +96,14 @@ export default {
       { name: "대우중공업", price: "100,000", quantity: 1, checked: false },
       ],
       selectedTab: "first",
+      posts:{labels: [ '01', '02', '03','04', '05', '06','07', '08', '09','10', '11', '12'],
+        datasets: [
+          {
+            label:'Dividend',
+            backgroundColor: '#f87979',
+            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11],
+          },
+        ]},
     }
   },
   computed:{
@@ -102,7 +112,7 @@ export default {
           return this.stocks.filter(stock => stock.checked);
         }
         return [];
-    
+
   },
   chartData() {
     const checkedStocks = this.checkedStocks;
@@ -134,9 +144,25 @@ export default {
           }
         ]
       }
+    },
+    dartchartData() {
+      return{
+        
       }
+    }
   },
   methods: {
+    updatePort() {
+            const headers = { 'Authorization': `JWT ${localStorage.getItem('access_token')}` };
+            axios
+                .get("http://127.0.0.1:8000/api/portfolio/", { headers })
+                  .then(response => {
+                    this.dartchartDataresponse.data.results[0].keys;
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  });
+    },
     stockClick(stock) {
       stock.checked = true;
     },

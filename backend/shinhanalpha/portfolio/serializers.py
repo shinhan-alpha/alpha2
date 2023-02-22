@@ -15,3 +15,13 @@ class PortfolioSerializer(serializers.ModelSerializer):
     class Meta:
         model=Portfolio
         fields='__all__'
+
+class PortfolioDetailSerializer(serializers.ModelSerializer):
+    member_acct_no = serializers.SerializerMethodField()
+    
+    def get_member_acct_no(self, obj):
+        return obj.member.acct_no
+    
+    class Meta:
+        model=Portfolio
+        fields='__all__'
