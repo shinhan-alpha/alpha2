@@ -1,39 +1,62 @@
 <template>
-    <div class="container">
-      <div class="box" v-for="(item, index) in items" :key="index" :style="{ width: item + '%' }">{{ item }}</div>
-    </div>
-  </template>
-  
-  <style scoped>
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 33.33%;
-    margin: auto;
-  }
-  
-  .box {
-    height: 10px;
-    border: 1px solid black;
-    margin: 0;
-  }
-  </style>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        price: 100, // 현재가
-        items: [], // 1% 씩 커진 값이 들어갈 배열
-      }
-    },
-    mounted() {
-      // 1% 씩 커진 값들을 계산하여 items 배열에 추가합니다.
-      for (let i = 1; i <= 100; i++) {
-        this.items.push((this.price / 100) * i);
-      }
+  <div>
+    <canvas ref="lineChart"></canvas>
+  </div>
+</template>
+
+<script>
+import Chart from 'chart.js';
+
+export default {
+  name: 'LineChart',
+  data() {
+        return {
+          title: 'Chart Title',
+          labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
+          values: [10, 20, 30, 40, 50],
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }
+      },
+  props: {
+    data: {
+      type: Object,
+      required: true
+    }
+  },
+  mounted() {
+    this.drawLineChart();
+  },
+  methods: {
+    drawLineChart() {
+      const ctx = this.$refs.lineChart.getContext('2d');
+
+      const lineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: this.data.labels,
+          datasets: [{
+            label: this.data.title,
+            data: this.data.values,
+            backgroundColor: this.data.backgroundColor,
+            borderColor: this.data.borderColor,
+            borderWidth: this.data.borderWidth
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
     }
   }
-  </script>
-  
+}
+</script>

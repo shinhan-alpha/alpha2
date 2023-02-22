@@ -45,6 +45,7 @@
                     {{ stock.currentPrice }}원
                 <button type="button" @click="incrementPrice(stock)">+</button>
             </div>
+            <b style="top:180px; left:45px; position:relative">총 매수금액: {{ quantity * currentPrice }}</b>
             <div>
                 <img src="../../../images/cartbut.png" style="top:200px;left:45px; position:relative">
                 <img src="../../../images/stockbuy.png" style="top:200px;left:55px; position:relative">
@@ -60,7 +61,7 @@ export default {
     data() {
     return {
       stock: this.$store.state.stock,
-      quantity:0,
+      quantity:1,
     }
   },
   methods:{
@@ -73,14 +74,15 @@ export default {
       }
     },
       incrementPrice(stock) {
-      this.stock.currentPrice += 100;
+        this.stock.currentPrice += 100;
+        console.log(this.stock.currentPrice)
     },
     decrementPrice(stock) {
       if (this.stock.currentPrice > 1){
         this.stock.currentPrice -= 100;
       }
-  },
-  
+    },
+    
   }}
 </script>
 

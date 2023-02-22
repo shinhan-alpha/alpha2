@@ -53,20 +53,28 @@
             <div v-if="selectedTab == 'sec'">
                 <div id="main">
             <div class="main-top">
-                <span>문민제</span>님의 배당 포트폴리오
-                <div class="pie-chart">
-                    <Pie :data="chartData" :options="options" />
+                <div class="my-box">
+                     <span>월별 목표 배당금</span>
+                     <Bar :data="divchartData" :options="options"/>
                 </div>
-                <hr>
             </div>
              
             <div class="main-bottom">      
                 <div>
-                    <div class="my-box">
-                     <span>월별 목표 배당금</span>
-                     <Bar :data="divchartData" :options="options"/>
-                    </div>
-
+                    <table>
+                    <thead>
+                        <tr>
+                        <th>월</th>
+                        <th>금액</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in monthlyData" :key="index">
+                            <td>{{ item.month }}</td>
+                            <td>{{ item.amount }}</td>
+                        </tr>
+                    </tbody>
+                    </table>
                 </div>
                 <div id="save" @click=updatePort()>
                     <span>설정 완료</span>
@@ -100,7 +108,21 @@ export default {
                 { name: "실물자산", percent: 0},
                 { name: "가상화폐", percent: 0 },
             ],
-            selectedTab : 'first'
+            selectedTab : 'first',
+            monthlyData: [
+                { month: '1월', amount: 100000 },
+                { month: '2월', amount: 200000 },
+                { month: '3월', amount: 300000 },
+                { month: '4월', amount: 400000 },
+                { month: '5월', amount: 500000 },
+                { month: '6월', amount: 600000 },
+                { month: '7월', amount: 700000 },
+                { month: '8월', amount: 800000 },
+                { month: '9월', amount: 900000 },
+                { month: '10월', amount: 1000000 },
+                { month: '11월', amount: 1100000 },
+                { month: '12월', amount: 1200000 }
+            ]
         }
     },
     computed:{
@@ -174,9 +196,24 @@ export default {
   .tab-content {
     margin-top: 10px;
   }
-tr:nth-child(odd) {
-          background-color: #a5a5a5;
+  table {
+          border-collapse: collapse;
+          width: 100%;
+          margin-bottom:100px;
       }
+
+      td {
+          text-align: center;
+          padding: 8px;
+      }
+
+      th {
+          background-color: #333;
+          color: white;
+      }
+    tr:nth-child(odd) {
+            background-color: #a5a5a5;
+        }
     /* topbar */
     #top-wrapper {
         text-align: left;

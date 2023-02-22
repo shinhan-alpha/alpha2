@@ -14,6 +14,7 @@
           <div id="modal-container" class="black-bg" v-if="openModal == true">
               <div class="white-bg">
                   <div>
+                    <b>알파카트 담기 내역확인</b><br><br>
                     계좌번호   124-124-124124<br>
                     주문종목   LG전자(066570)<br><br>
                 </div>

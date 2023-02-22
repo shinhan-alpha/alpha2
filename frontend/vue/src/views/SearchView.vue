@@ -32,7 +32,7 @@ export default {
     curstock(stock) {
       console.log(stock)
       this.$store.commit('curStock', stock)
-      this.$router.push('/current');
+      this.$router.push('/stockbuy');
     },
     searchStocks() {
       if (this.searchRequest) {
