@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Stocks Pie Graph</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style type="text/css">
+    .my-box {
+      width: 450px;
+      border: 1px solid;
+      padding: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <h1>알파카트 주문창</h1>
+    <div class="my-box">
+      <input type="checkbox"><span>..</span> </input>
+      <button class="plus-button">+</button>
+      <button class="minus-button">-</button>
+      <p></p>
+    </div>
+    <div class="my-box">
+      <input type="checkbox"><span>..</span> </input>
+      <button class="plus-button">+</button>
+      <button class="minus-button">-</button>
+      <p></p>
+    </div>
+    <div class="my-box">
+      <input type="checkbox"><span>..</span> </input>
+      <button class="plus-button">+</button>
+      <button class="minus-button">-</button>
+      <p></p>
+    </div>
+    <div class="my-box">
+      <input type="checkbox"><span>..</span> </input>
+      <button class="plus-button">+</button>
+      <button class="minus-button">-</button>
+      <p></p>
+    </div>
+
+    <!-- <h1>주식 포트폴리오</h1> -->
+    <div class="chart-container" style="position: relative; height:0.1vh; width:0.1vw">
+      <canvas id="myChart"></canvas>
+    </div>
+    <h2>주문금액(합계) <span id="myValue">0원</span></h2>
+    <button type="button" id="show-checked-button"><img src="images/매수버튼.PNG" alt="매수버튼" onclick=""></button>
+  </div>
+
+  <script>
+    const valueDisplay = document.getElementById("myValue");
+    const checkboxes = document.querySelectorAll('input[type=checkbox]');
+    const labels = document.querySelectorAll('.my-box span');
+    const stockPrices = [113000, 179200, 62600, 100000];
+    const stockNumber = [2, 4, 3, 1];
+    const plusButtons = document.querySelectorAll('.plus-button');
+    const minusButtons = document.querySelectorAll('.minus-button');
+    const showCheckedButton = document.getElementById('show-checked-button');
+
+    showCheckedButton.addEventListener('click', function () {
+      let checkedItems = [];
+      for (let i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+          checkedItems.push(labels[i].textContent);
+        }
+      }
+      let myWindow = window.open("", "myWindow", "width=200,height=100");
+      myWindow.document.write("<p>" + "주문확인:<br>" + checkedItems.join('<br>') + "</p>" + "주문금액(합계): " + myChart.data.datasets[0].data.reduce((a, b) => a + b, 0) + "원");
+    });
+
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: [`LG전자`, '현대차', '삼성전자', '대우중공업'],
+        datasets: [{
+          data: [0, 0, 0, 0,],
+          backgroundColor: [
+            '#' + Math.floor(Math.random() * 16777215).toString(16),
+            '#' + Math.floor(Math.random() * 16777215).toString(16),
+            '#' + Math.floor(Math.random() * 16777215).toString(16),
+            '#' + Math.floor(Math.random() * 16777215).toString(16),
+          ]
+        }]
+      }
+    });
+    for (let i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].addEventListener('click', function () {
+        if (this.checked) {
+          myChart.data.datasets[0].data[i] += stockNumber[i] * stockPrices[i];
+          myChart.update();
+          this.parentNode.style.backgroundColor = "skyblue";
+        } else {
+          myChart.data.datasets[0].data[i] -= stockNumber[i] * stockPrices[i];
+          myChart.update();
+          this.parentNode.querySelector('p').innerText = '';
+          this.parentNode.style.backgroundColor = "white";
+        }
+        let sum = myChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+        valueDisplay.innerText = sum + '원';
+      });
+      labels[i].innerText = `${myChart.data.labels[i]} 현재가: ${stockPrices[i]} 수량: ${stockNumber[i]} 총금액: ${stockNumber[i] * stockPrices[i]}`;
+    }
+
+    for (let i = 0; i < plusButtons.length; i++) {
+      plusButtons[i].addEventListener('click', function () {
+        stockNumber[i]++;
+        labels[i].innerText = `${myChart.data.labels[i]} 현재가: ${stockPrices[i]} 수량: ${stockNumber[i]} 총금액: ${stockNumber[i] * stockPrices[i]}`;
+      });
+    }
+
+    for (let i = 0; i < minusButtons.length; i++) {
+      minusButtons[i].addEventListener('click', function () {
+        if (stockNumber[i] > 0) {
+          stockNumber[i]--;
+          labels[i].innerText = `${myChart.data.labels[i]} 현재가: ${stockPrices[i]} 수량: ${stockNumber[i]} 총금액: ${stockNumber[i] * stockPrices[i]}`;
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

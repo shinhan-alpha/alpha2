@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://kit.fontawesome.com/02e49749bb.js" crossorigin="anonymous"></script>
+    <style>
+        /* index */
+        .index {
+            text-align: center;
+            display: table;
+        }
+        .index img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* menubar */
+        #menu-wrapper {
+            overflow-x: auto;  
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            border-collapse: collapse;
+            height: 43px;
+        }
+        #menu-tab {
+            background-color: #393D46;
+        }
+        #menu-tab i {
+            font-size: 20px;
+        }
+        table {
+            background-color: #333;
+            border-collapse: collapse;
+            width: 200%;
+            height: 43px;
+        }
+        th, td {
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: auto;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="index">
+            <div>
+                <img src="images/index.png">
+            </div>   
+        </div>
+        <div id="menu-wrapper">
+            <table>
+                <tr>
+                    <th id="menu-tab"><a href="menu.html"><i class="fa-solid fa-bars"></i></a></th>
+                    <th><a href="#">홈</a> </th>
+                    <th><a href="#">관심<br>종목</a></th>
+                    <th><a href="current.html">현재가</a></th>
+                    <th><a href="#">주식<br>주문</a></th>
+                    <th><a href="#">주식<br>잔고</a></th>
+                    <th><a href="#">종합<br>차트</a></th>
+                    <th><a href="#">지수환율<br>시장지표</a></th>
+                    <th><a href="#">매매<br>동향</a></th>
+                    <th><a href="#">즉시<br>이체</a></th>
+                    <th><a href="#">총자산<br>현황</a></th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                // any necessary data can be defined here
+            },
+            methods: {
+                // any necessary methods can be defined here
+            }
+        });
+    </script>
+</body>
+</html>

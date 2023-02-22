@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base target="_top">
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css" />
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+  <script>
+    
+    $(function() 
+    {
+
+      var searchRequest = null;
+
+	  /*
+        https://www.sedaily.com/Stock/Quote/JsonSearchData?text=LG전자
+       
+       JSON Data Format
+       { "Items": 
+        [ {"Market":"1","IndustryCode":"013","StockCode":"066570","StockName":"LG전자","CurrentPrice":"92,900","PreGap":"400","PreRate":"+0.43","Change":"2","Initial":"E","StockTime":"153004"},
+          {"Market":"1","IndustryCode":"013","StockCode":"066575","StockName":"LG전자우","CurrentPrice":"45,100","PreGap":"250","PreRate":"-0.55","Change":"5","Initial":"E","StockTime":"153030"}
+        ]
+       }
+       */
+
+      $("#stockName").autocomplete({
+          
+          source: function( request, response ) {
+            
+           // 이전 요청 초기화 
+		   if(searchRequest != null ) searchRequest.abort(); 
+           
+           // jquery의 $.ajax 명령
+            searchRequest = $.ajax({
+              url: "http://www.sedaily.com/Stock/Quote/JsonSearchData",  
+              type: "get", 
+              data: { text: $("#stockName").val() },
+              success: function(data)
+              {
+                var obj = data["Items"].map(function(v){
+                    return { 
+                      label : v.StockName +"(" + v.StockCode +")", 
+                      value : v.StockCode, 
+                      price : v.CurrentPrice,
+                      market : (v.Market==1)?"코스피":"코스닥",
+                      changes : (v.PreRate.indexOf('-')>0)? -v.PreGap:v.PreGap,
+                      changepct : v.PreRate,
+                      stockTime : v.StockTime,
+					            IndustryCode : v.IndustryCode
+                    }
+                });
+                response(obj);
+              },
+              dataType: "json",
+            });
+           
+          },
+          select: function( event, ui ) { 
+            // 항목을 선택하면 HTML 페이지에 전달/표시 
+            $(this).val(ui.item.label);
+            $("#stockCode").val(ui.item.value);
+            $("#stockPrice").html(ui.item.price);
+            $("#market").html(ui.item.market);
+            $("#changes").html(ui.item.changes);
+            $("#changepct").html(ui.item.changepct);
+            $("#stockTime").html(ui.item.stockTime);
+            $("#dividend").html(ui.item.value);
+            $("#divrate").html(ui.item.value);
+            return false;
+          },
+          focus : function(event, ui) { 
+              return false;
+          },     
+          autoFocus: true, 
+          minLength: 2 // 최소 글자수
+        });
+      
+
+    });
+     
+     
+      
+  </script>
+</head>
+ 
+ 
+<body>
+
+  <div id="notice"></div>
+   <form id="input_form">
+
+    <table width="320" height="100%">
+    <tr>
+      <th > 종목명</th>
+      <td>
+        <input type="text" name="stockName" id="stockName" width="100%"> 
+      </td>
+    </tr>
+    <tr>
+      <th>종목코드</th>
+      <td>
+        <input type="text" name="stockCode" id="stockCode" value="" size=6 />
+      </td>
+    </tr>
+    <tr>
+      <th>주가정보</th>
+      <td>
+            <div>시장:   :<span id ="market"></span></div>
+            <div>주가    :<span id ="stockPrice"></span></div>
+            <div>전일비 :<span id ="changes"></span></div>
+            <div>등락률 :<span id ="changepct"></span></div>
+            <div>시간 : <span id ="stockTime"></span></div>
+            <div>배당률 : <span id ="dividend"></span></div>
+            <div>주당배당 : <span id ="divrate"></span></div>
+
+      </td>
+    </tr>
+    </table>
+
+
+  </form>
+
+
+    
+  </body>
+</html>
+
+

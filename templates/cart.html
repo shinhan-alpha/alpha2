@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Stocks Pie Graph</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style type="text/css">
+        .my-box {
+            width: 330px;
+            border: 1px solid;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h1>알파카트(일괄매수)</h1>
+        <div class="my-box">
+            <input type="checkbox"><span>..</span> </input>
+            <p></p>
+        </div>
+        <div class="my-box">
+            <input type="checkbox"><span>..</span> </input>
+            <p></p>
+        </div>
+        <div class="my-box">
+            <input type="checkbox"><span>..</span> </input>
+            <p></p>
+        </div>
+        <div class="my-box">
+            <input type="checkbox"><span>..</span> </input>
+            <p></p>
+        </div>
+
+        <h1>주식 포트폴리오</h1>
+        <div class="chart-container" style="position: relative; height:40vh; width:30vw">
+            <canvas id="myChart"></canvas>
+        </div>
+        <h2>주문금액(합계) <span id="myValue">0</span></h2>
+        <button type="button"><img src="images/매수버튼.PNG" alt="매수버튼" onclick=""></button>
+    </div>
+
+    <script>
+        const valueDisplay = document.getElementById("myValue");
+        const checkboxes = document.querySelectorAll('input[type=checkbox]');
+        const labels = document.querySelectorAll('.my-box span');
+        const stockPrices = [113000, 179200, 62600, 100000];
+        const stockNumber = [1, 1, 1, 1];
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [`LG전자`, '현대차', '삼성전자', '대우중공업'],
+                datasets: [{
+                    data: [0, 0, 0, 0,],
+                    backgroundColor: [
+                        '#' + Math.floor(Math.random() * 16777215).toString(16),
+                        '#' + Math.floor(Math.random() * 16777215).toString(16),
+                        '#' + Math.floor(Math.random() * 16777215).toString(16),
+                        '#' + Math.floor(Math.random() * 16777215).toString(16),
+                    ]
+                }]
+            }
+        });
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener('click', function () {
+                if (this.checked) {
+                    myChart.data.datasets[0].data[i] += stockNumber[i] * stockPrices[i];
+                    myChart.update();
+                    this.parentNode.style.backgroundColor = "skyblue";
+                } else {
+                    myChart.data.datasets[0].data[i] -= stockNumber[i] * stockPrices[i];
+                    myChart.update();
+                    this.parentNode.querySelector('p').innerText = '';
+                    this.parentNode.style.backgroundColor = "white";
+                }
+                let sum = myChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                valueDisplay.innerText = sum;
+            });
+            labels[i].innerText = `${myChart.data.labels[i]} 현재가: ${stockPrices[i]} 수량: ${stockNumber[i]}`;
+        }
+
+    </script>
+</body>
+
+</html>
