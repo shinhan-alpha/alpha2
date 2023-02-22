@@ -43,7 +43,7 @@
         <h2>주문금액(합계) <span id="myValue">{{checkedStockPricesSum}}</span></h2>
       </div>
       <div v-else-if="selectedTab == 'sec'">
-        <Bar :data="divchartData" :options="options"/>
+        <Bar :data="divs" :options="divs.options"/>
       </div>
       <div v-else-if="selectedTab == 'third'">
         <div style="display:inline-block; width:100px">
@@ -55,7 +55,7 @@
         </div>
         <div style="display:inline-block; width:100px">
           <b>목표 포트폴리오</b>
-          <Pie :data="updatePort" :options="options"/>
+          <Pie :data="darts" :options="options"/>
         </div>
       </div>
       <button type="button" @click="add" style="background-color:white">
@@ -71,7 +71,8 @@
 </template>
 
 <script>
-
+import axios from 'axios';
+import dividend from "@/assets/dividend_3.json"
 import { Chart as ChartJS, ArcElement, Tooltip, Legend,Title,BarElement,CategoryScale,LinearScale } from 'chart.js'
 import { Pie, Bar } from 'vue-chartjs'
 
@@ -84,26 +85,53 @@ export default {
   },
   data() {
     return {
+      dividend: [dividend],
       categoryList: ['주식포트폴리오'],
       stocks: [
-      { name: "LG전자", price: "113,000", quantity: 1, checked: false },
-      { name: "현대차", price: "179,200", quantity: 1, checked: false },
-      { name: "삼성전자", price: "62,600", quantity: 1, checked: false },
-      { name: "대우중공업", price: "100,000", quantity: 1, checked: false },
-      { name: "LG전자", price: "113,000", quantity: 1, checked: false },
-      { name: "현대차", price: "179,200", quantity: 1, checked: false },
-      { name: "삼성전자", price: "62,600", quantity: 1, checked: false },
-      { name: "대우중공업", price: "100,000", quantity: 1, checked: false },
+      { name: "LG전자", code: "066570", price: "113,000", quantity: 1, checked: false },
+      { name: "현대차", code: "005380", price: "179,200", quantity: 1, checked: false },
+      { name: "삼성전자", code: "005930", price: "62,600", quantity: 1, checked: false },
+      { name: "대우중공업", code: "042670", price: "100,000", quantity: 1, checked: false },
+      { name: "LG전자", code: "066570", price: "113,000", quantity: 1, checked: false },
+      { name: "현대차", code: "005380", price: "179,200", quantity: 1, checked: false },
+      { name: "삼성전자", code: "005930", price: "62,600", quantity: 1, checked: false },
+      { name: "대우중공업", code: "042670", price: "100,000", quantity: 1, checked: false },
       ],
       selectedTab: "first",
-      posts:{labels: [ '01', '02', '03','04', '05', '06','07', '08', '09','10', '11', '12'],
+      divs:{
+        labels: [ '01', '02', '03','04', '05', '06','07', '08', '09','10', '11', '12'],
         datasets: [
           {
-            label:'Dividend',
-            backgroundColor: '#f87979',
+            label:'배당금',
+            backgroundColor: 'red',
             data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11],
           },
-        ]},
+          {
+            label:'추가',
+            backgroundColor: '#f87979',
+            data: [],
+          },
+        ],
+        options: {
+          responsive: true,
+            scales: {
+              x: {
+                stacked: true,
+              },
+              y: {
+                stacked: true
+              }
+    }
+    },},
+      darts:{
+        labels:['주식','채권','실물자산','가상화폐'],
+        datasets:[
+          {
+            backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+            data:[]
+          }
+        ]
+      }
     }
   },
   computed:{
@@ -120,6 +148,10 @@ export default {
     const checkedStockPrices = checkedStocks.map(stock => Number(stock.price.replace(',', ''))*stock.quantity);
     const sum = checkedStockPrices.reduce((acc, val) => acc + val, 0);
     this.checkedStockPricesSum = sum;
+  
+    const filteredData = checkedStocks.map(checkedStock => this.dividend.find(item => item.stock_code.value === checkedStock.code));
+    
+    console.log(filteredData)
     return {
       labels: checkedStockNames,
       datasets: [
@@ -130,34 +162,18 @@ export default {
       ],
       checkedStockPricesSum: 0,
     };
-  },
-  divchartData() {
-    // const checkedStocks = this.checkedStocks;
-    // const checkedStockdiv = checkedStocks.map(stock => Number(dividend)*stock.quantity);
-      return{
-        labels: [ '01', '02', '03','04', '05', '06','07', '08', '09','10', '11', '12'],
-        datasets: [
-          {
-            label:'Dividend',
-            backgroundColor: '#f87979',
-            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11],
-          }
-        ]
-      }
-    },
-    dartchartData() {
-      return{
-        
-      }
     }
   },
   methods: {
+    updateDiv() {
+      this.checkedStocks
+      },
     updatePort() {
             const headers = { 'Authorization': `JWT ${localStorage.getItem('access_token')}` };
             axios
                 .get("http://127.0.0.1:8000/api/portfolio/", { headers })
-                  .then(response => {
-                    this.dartchartDataresponse.data.results[0].keys;
+                  .then(res => {
+                    this.darts.datasets[0].data = [res.data.results[0].stock,res.data.results[0].bond,res.data.results[0].real_asset,res.data.results[0].crypto];
                   })
                   .catch(error => {
                     console.log(error);
@@ -180,6 +196,10 @@ export default {
           console.log('맨 아래 도달');
         }
       }
+  },
+  mounted() {
+    this.updateDiv()
+    this.updatePort()
   }
 }
 </script>
