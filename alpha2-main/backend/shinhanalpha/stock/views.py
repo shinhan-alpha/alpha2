@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import mixins, generics
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import StockSerializer, CartSerializer, CartCreateSerializer, CartDeleteSerializer, BalanceSerializer
 from .models import Stock, Cart, Balance
@@ -7,6 +8,8 @@ from .models import Stock, Cart, Balance
 
 class StockListView(
     mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.CreateModelMixin,
     generics.GenericAPIView
 ):
     serializer_class = StockSerializer
@@ -17,6 +20,9 @@ class StockListView(
 
     def get(self, request, *args, **kwargs):
         return self.list(request, args, kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        return self.create(request, args, kwargs)
 
 class StockDetailView(
     mixins.ListModelMixin,
@@ -33,46 +39,30 @@ class StockDetailView(
         return self.retrieve(request, args, kwargs)
 
 
-
 class CartListView(
-    mixins.ListModelMixin, 
     mixins.CreateModelMixin,
-    generics.GenericAPIView
-):
-    serializer_class = CartSerializer
-
-    def get_queryset(self):
-        stock_id = self.kwargs.get('stock_id')
-        if stock_id:
-            return Cart.objects.filter(stock_id=stock_id) \
-                .select_related('user', 'stock') \
-                .stock_by('-id')
-        return Cart.objects.none()
-
-    def get(self,request, *args, **kwargs):
-        return self.list(request, args, kwargs)
-    
-    def post(self, request, *args, **kwargs):
-        return self.create(request, args, kwargs)
-
-
-class CartCreateView(
-    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
     generics.GenericAPIView
 ):  
-    serializer_class = CartCreateSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CartCreateSerializer
+        return CartSerializer
+
+    def get_permission_class(self):
+        if self.request.method == 'POST':
+            return [IsAuthenticated]
+        return 
 
     def get_queryset(self):
-        stock_id = self.kwargs.get('stock_id')
-        if stock_id:
-            return Cart.objects.filter(stock_id=stock_id) \
-                .select_related('user', 'stock') \
-                .filter()
-        return Cart.objects.none()
+        pk = self.kwargs.get('pk')
+        return Cart.objects.filter(member_id = pk).order_by('-id')
     
     def post(self, request, *args, **kwargs):
         return self.create(request, args, kwargs)
     
+    def get(self, request, *args, **kwargs):
+        return self.list(request, args, kwargs)
 
 class CartDeleteView(
     mixins.DestroyModelMixin,

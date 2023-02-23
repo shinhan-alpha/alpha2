@@ -9,16 +9,10 @@ class StockSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
-    stock_stock_code = serializers.SerializerMethodField()
     member_username = serializers.SerializerMethodField()
-    tstamp = serializers.DateTimeField(
-        read_only=True, format='%Y-%m-%d %H:%M:%S'
-    )
-    def get_stock_stock_code(self, obj):
-        return obj.stock.stock_code
 
     def get_member_username(self, obj):
-        return obj.user.username
+        return obj.member.username
 
     class Meta:
         model = Cart
@@ -26,31 +20,22 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class CartCreateSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault(),
+    # 로그인 된 정보(CurrentuserDefault)를 자동으로 불러옴
+    member = serializers.HiddenField(
+        default = serializers.CurrentUserDefault(),
         required=False
     )
 
     def validate_user(self, value):
         if not value.is_authenticated:
-            raise serializers.ValidationError('user is required')
+            raise serializers.ValidationError("user is required")
         return value
-
+    
     class Meta:
         model = Cart
         fields = '__all__'
 
 class CartDeleteSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault(),
-        required=False
-    )
-    
-    def validate_user(self, value):
-        if not value.is_authenticated:
-            raise serializers.ValidationError('user is required')
-        return value
-
     class Meta:
         model = Cart
         fields = '__all__'

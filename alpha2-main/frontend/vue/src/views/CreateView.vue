@@ -19,10 +19,6 @@
                 </div>
                 <hr>
             </div>
-            <div id="port-select">
-                    <button>목표 비율 설정</button>
-                    <button>내 자산 입력</button>
-            </div>  
             <div class="main-bottom">      
                 <div>
                     <div class="my-box">

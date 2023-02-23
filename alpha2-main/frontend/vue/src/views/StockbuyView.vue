@@ -55,7 +55,7 @@
                 <div class="ml">
                     <div class="plus-minus">
                         <button type="button" @click="decrementPrice(stock)">-</button>
-                        {{ stock.currentPrice }}원
+                        {{ buyPrice }}원
                         <button type="button" @click="incrementPrice(stock)">+</button>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                                     <div>
                                         <div class="plus-minus">
                                             <button type="button" @click="decrementPrice(stock)">-</button>
-                                            {{ stock.currentPrice }}원
+                                            {{ buyPrice }}원
                                             <button type="button" @click="incrementPrice(stock)">+</button>
                                         </div>
                                     </div>
@@ -126,14 +126,18 @@
 </template>
 
 <script>
+import axios from 'axios';
 import store from '../store'
 export default {
   data() {
     return {
       stock: this.$store.state.stock,
       quantity: 1,
+      buyPrice: this.$store.state.stock.currentPrice,
       totalPrice: '',
       openModal: false,
+      stock_code: this.$store.state.stock.stockCode,
+      pk: 1,
     }
   },
   methods: {
@@ -146,22 +150,39 @@ export default {
       }
     },
     incrementPrice(stock) {
-      const priceWithoutComma = this.stock.currentPrice.replace(',', '');
+      const priceWithoutComma = this.buyPrice.replace(',', '');
       const newPrice = Number(priceWithoutComma) + 100;
-      this.stock.currentPrice = newPrice.toLocaleString(); // adds comma back as thousands separator
-      console.log(this.stock.currentPrice);
+      this.buyPrice = newPrice.toLocaleString(); // adds comma back as thousands separator
+      console.log(this.buyPrice);
     },
     decrementPrice(stock) {
-      const priceWithoutComma = this.stock.currentPrice.replace(',', '');
-      if (Number(priceWithoutComma) > 1) {
+      const priceWithoutComma = this.buyPrice.replace(',', '');
+      if (Number(priceWithoutComma) > 100) {
         const newPrice = Number(priceWithoutComma) - 100;
-        this.stock.currentPrice = newPrice.toLocaleString(); // adds comma back as thousands separator
+        this.buyPrice = newPrice.toLocaleString(); // adds comma back as thousands separator
       }
     },
+    updateCart() {
+        this.pk += 1
+        const data = {
+            buy_price: this.buyPrice,
+            buy_quantity: this.quantity,
+            stock_code: this.stock_code,
+        };
+        const headers = { 'Authorization': `JWT ${localStorage.getItem('access_token')}` };
+        axios
+            .post("http://127.0.0.1:8000/api/stock/cart", data, { headers })
+            .then(() => {
+                console.log('장바구니 데이터 반영');
+            })
+            .catch((error) => {
+                let errorMsg = "";
+            });
+    }
   },
   computed: {
     calculate() {
-        const priceWithoutComma = this.stock.currentPrice.replace(',', '');
+        const priceWithoutComma = this.buyPrice.replace(',', '');
         const totalPrice = Number(priceWithoutComma) * this.quantity;
         return totalPrice.toLocaleString();
     },

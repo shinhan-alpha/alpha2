@@ -5,10 +5,9 @@ from django.db import models
 class Stock(models.Model):
     stock_code = models.CharField(max_length=16, verbose_name='종목코드')
     stock_name = models.CharField(max_length=16, verbose_name='종목명')
-    stock_ind_code = models.CharField(max_length=16, verbose_name='산업코드')
-    stock_cp = models.IntegerField(verbose_name='현재가')
-    stock_pg = models.IntegerField(verbose_name='전일대비금액')
-    stock_pr = models.IntegerField(verbose_name='전일대비등락률')
+    stock_cp = models.CharField(max_length=32, verbose_name='현재가')
+    stock_pg = models.CharField(max_length=16, verbose_name='전일대비금액')
+    stock_pr = models.CharField(max_length=16, verbose_name='전일대비등락률')
 
     class Meta:
         db_table='stock'
@@ -18,8 +17,8 @@ class Stock(models.Model):
 
 class Cart(models.Model):
     member = models.ForeignKey('member.Member', on_delete=models.CASCADE, verbose_name='회원')
-    stock = models.ForeignKey('stock.Stock', on_delete=models.CASCADE, verbose_name='주식')
-    buy_price = models.IntegerField(verbose_name='매수가')
+    stock_code = models.CharField(max_length=16, verbose_name='종목코드')
+    buy_price = models.CharField(max_length=16, verbose_name='매수가')
     buy_quantity = models.IntegerField(verbose_name='매수수량')
 
     class Meta:

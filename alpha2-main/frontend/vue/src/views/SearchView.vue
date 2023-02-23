@@ -29,11 +29,6 @@ export default {
     }
   },
   methods: {
-    curstock(stock) {
-      console.log(stock)
-      this.$store.commit('curStock', stock)
-      this.$router.push('/stockbuy');
-    },
     searchStocks() {
       if (this.searchRequest) {
         this.searchRequest.cancel(); // cancel previous request
@@ -63,23 +58,27 @@ export default {
           console.log(error);
         }
       });
-
+    },
+    curstock(stock) {    
+      console.log(stock)
+      this.$store.commit('curStock', stock)
       const data = {
-        stock_name: this.stockName,
-        stock_code: this.stockCode,
-        stock_cp: this.currentPrice,
-        stock_pg: this.preGap,
-        stock_pr: this.preRate,
+        stock_name: stock.stockName,
+        stock_code: stock.stockCode,
+        stock_cp: stock.currentPrice,
+        stock_pg: stock.preGap,
+        stock_pr: stock.preRate,
       };
-      const headers = { 'Authorization': `JWT ${localStorage.getItem('access_token')}` };
       axios
-        .post("http://127.0.0.1:8000/api/stock/", data, {headers}) 
+        .put("http://127.0.0.1:8000/api/stock/", data)
         .then(() => {
           console.log('주식 데이터 반영');
         })
         .catch((error) => {
           let errorMsg = "";
-        });
+        });  
+      this.$router.push('/stockbuy');
+
     }
   }
 }
