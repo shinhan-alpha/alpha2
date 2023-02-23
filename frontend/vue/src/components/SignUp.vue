@@ -50,7 +50,7 @@
           };
   
           axios
-            .post("http://127.0.0.1:8000/api/member", data)
+            .post("http://34.64.108.15/api/member", data)
             .then(() => {
               alert("회원가입 완료!");
             })
