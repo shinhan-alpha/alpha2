@@ -1,14 +1,14 @@
 <template>
     <div>
     <div class="top_nav">
-              <a href="#"><img src="../../../images/arrow.png" style="float:left"></a>
+              <a href="#"><img src="../../images/arrow.png" style="float:left"></a>
               <!-- <select id="stockList" v-model="selected">
                   <option v-for="option in options" :value="option.price">{{ option.stock }}</option>
               </select> -->
               <a href="./search"><input v-model="stock.stockName"/></a> 
-              <a @click="openModal = true"><img src="../../../images/cart.png"></a>
-              <a href="#"><img src="../../../images/order.png"></a>
-              <a href="#"><img src="../../../images/more.png"></a>
+              <a @click="openModal = true"><img src="../../images/cart.png"></a>
+              <a href="#"><img src="../../images/order.png"></a>
+              <a href="#"><img src="../../images/more.png"></a>
           </div>
           <!-- Modal -->
           <div id="modal-container" class="black-bg" v-if="openModal == true">
@@ -47,7 +47,7 @@
                 </div>
                 <div v-if="selectedTab == 'first'">
                   <div>
-                    <img src="../../../images/cur.png" style="width:304px; height: 350px;object-fit:cover"/>
+                    <img src="../../images/cur.png" style="width:304px; height: 350px;object-fit:cover"/>
                   </div>
                   <!-- <div class="container">
                     <div class="box" v-for="(item, index) in items" :key="index">

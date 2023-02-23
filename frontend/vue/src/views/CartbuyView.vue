@@ -28,7 +28,7 @@
 
       <h2>주문금액(합계) <span id="myValue">{{checkedStockPricesSum}}</span></h2>
       <button type="button" @click="modal">
-        <img id="buy" src="../../../images/buy.png" alt="매수버튼"/>
+        <img id="buy" src="../../images/buy.png" alt="매수버튼"/>
       </button>
       <h2>주식 포트폴리오</h2>
       <Pie :data="chartData" :options="options" />

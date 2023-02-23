@@ -4,14 +4,14 @@
     {{stock.stockName}}
   </div>
   <div class="top_nav">
-            <a href="#"><img src="../../../images/arrow.png"></a>
+            <a href="#"><img src="../../images/arrow.png"></a>
             <!-- <select id="stockList" v-model="selected">
                 <option v-for="option in options" :value="option.price">{{ option.stock }}</option>
             </select> -->
             <a href="./search"><input v-model="stock.stockName"/></a>    
-            <a @click="openModal = true"><img src="../../../images/cart.png"></a>
-            <a href="#"><img src="../../../images/order.png"></a>
-            <a href="#"><img src="../../../images/more.png"></a>
+            <a @click="openModal = true"><img src="../../images/cart.png"></a>
+            <a href="#"><img src="../../images/order.png"></a>
+            <a href="#"><img src="../../images/more.png"></a>
         </div>
         <div>
             <div style="text-align: left;"><br><br>
@@ -24,17 +24,17 @@
         <!-- Modal -->
         <div id="modal-container" class="black-bg" v-if="openModal == true">
             <div class="white-bg">
-                <div class="cartcheck"><img src="../../../images/cartcheck.png"></div>
+                <div class="cartcheck"><img src="../../images/cartcheck.png"></div>
                 <button @click="close($event)" class="close">취소</button>
                 <button @click="check($event)" class="check">확인</button>
             </div>
         </div>
         <div>
-            <img src="../../../images/stocktab.png">
+            <img src="../../images/stocktab.png">
         </div>
         <div>
-            <img src="../../../images/stocks.png" style="left:0; position:absolute">
-            <img src="../../../images/misu.png" style="left:105px;width:220px; height:80px; position:absolute"/>
+            <img src="../../images/stocks.png" style="left:0; position:absolute">
+            <img src="../../images/misu.png" style="left:105px;width:220px; height:80px; position:absolute"/>
             <div style="top:110px; left:55px; position:relative">
                 <button type="button" @click="decrementQuantity(stock)">-</button>
                     {{ quantity }}주
@@ -47,8 +47,8 @@
             </div>
             <b style="top:180px; left:45px; position:relative">총 매수금액: {{ quantity * currentPrice }}</b>
             <div>
-                <img src="../../../images/cartbut.png" style="top:200px;left:45px; position:relative">
-                <img src="../../../images/stockbuy.png" style="top:200px;left:55px; position:relative">
+                <img src="../../images/cartbut.png" style="top:200px;left:45px; position:relative">
+                <img src="../../images/stockbuy.png" style="top:200px;left:55px; position:relative">
             </div>
         </div>
 

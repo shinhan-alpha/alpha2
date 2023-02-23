@@ -1,6 +1,6 @@
 <template>
   <div class="signup-page-container">
-    <img src="../../../images\shinhan_ci.jpg" style="width:280px; height:80px;" alt="My Image">
+    <img src="../../images\shinhan_ci.jpg" style="width:280px; height:80px;" alt="My Image">
     <h2>신한투자증권 회원가입</h2>
     <form class="signup-form">
       <div class="form-group">
@@ -55,7 +55,7 @@ export default {
       };
 
       axios
-        .post("http://127.0.0.1:8000/api/member", data)
+        .post("http://34.64.108.15/api/member", data)
         .then(() => {
           alert("회원가입 성공!");
         })

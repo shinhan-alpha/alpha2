@@ -232,7 +232,7 @@ export default {
     updatePort() {
             const headers = { 'Authorization': `JWT ${localStorage.getItem('access_token')}` };
             axios
-                .get("http://127.0.0.1:8000/api/portfolio/", { headers })
+                .get("http://34.64.108.15/api/portfolio/", { headers })
                   .then(res => {
                     this.darts.datasets[0].data = [res.data.results[0].stock,res.data.results[0].bond,res.data.results[0].real_asset,res.data.results[0].crypto];
                   })

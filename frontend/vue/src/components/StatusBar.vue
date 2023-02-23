@@ -1,6 +1,6 @@
 <template>
   <div id="status-wrapper">
-        <img src="../../../images/status.png"/>
+        <img src="../../images/status.png"/>
     </div>
 </template>
 

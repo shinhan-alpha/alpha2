@@ -1,7 +1,7 @@
 <template>
     <div class="container">
       <div style="">
-        <img src="../../../images/menu_tab.png">
+        <img src="../../images/menu_tab.png">
       </div>
       <div id="menus">
         <span id="portfolio">포트폴리오</span>
@@ -28,7 +28,7 @@
     methods: {
       async login() {
         try {
-          const response = await axios.post('http://127.0.0.1:8000/api/token', {
+          const response = await axios.post('http://34.64.108.15/api/token', {
             username: this.username,
             password: this.password,
           });
