@@ -19,6 +19,7 @@ class Stock(models.Model):
 class Cart(models.Model):
     member = models.ForeignKey('member.Member', on_delete=models.CASCADE, verbose_name='회원')
     stock = models.ForeignKey('stock.Stock', on_delete=models.CASCADE, verbose_name='주식')
+    name = models.CharField(max_length=64, verbose_name='종목명')
     buy_price = models.IntegerField(verbose_name='매수가')
     buy_quantity = models.IntegerField(verbose_name='매수수량')
 
