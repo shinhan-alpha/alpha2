@@ -1,21 +1,21 @@
 <template>
   <div>
-    <input type="text" v-model="query" @input="searchStocks" placeholder="Search stocks" />
+    <input type="text" v-model="query" @input="searchStocks" placeholder="종목검색" />
     <ul>
       <li v-for="stock in stocks" :key="stock.stockCode" @click="curstock(stock)">{{ stock.stockName }} - {{ stock.stockCode }}</li>
     </ul>
   </div>
 </template>
 <!-- /*
-        https://www.sedaily.com/Stock/Quote/JsonSearchData?text=LG전자
-       
-       JSON Data Format
-       { "Items": 
-        [ {"Market":"1","IndustryCode":"013","StockCode":"066570","StockName":"LG전자","CurrentPrice":"92,900","PreGap":"400","PreRate":"+0.43","Change":"2","Initial":"E","StockTime":"153004"},
-          {"Market":"1","IndustryCode":"013","StockCode":"066575","StockName":"LG전자우","CurrentPrice":"45,100","PreGap":"250","PreRate":"-0.55","Change":"5","Initial":"E","StockTime":"153030"}
-        ]
-       }
-       */ -->
+  https://www.sedaily.com/Stock/Quote/JsonSearchData?text=LG전자
+
+  JSON Data Format
+  { "Items": 
+  [ {"Market":"1","IndustryCode":"013","StockCode":"066570","StockName":"LG전자","CurrentPrice":"92,900","PreGap":"400","PreRate":"+0.43","Change":"2","Initial":"E","StockTime":"153004"},
+    {"Market":"1","IndustryCode":"013","StockCode":"066575","StockName":"LG전자우","CurrentPrice":"45,100","PreGap":"250","PreRate":"-0.55","Change":"5","Initial":"E","StockTime":"153030"}
+  ]
+  }
+*/ -->
 <script>
 import axios from 'axios';
 import store from '../store'
@@ -63,6 +63,23 @@ export default {
           console.log(error);
         }
       });
+
+      const data = {
+        stock_name: this.stockName,
+        stock_code: this.stockCode,
+        stock_cp: this.currentPrice,
+        stock_pg: this.preGap,
+        stock_pr: this.preRate,
+      };
+      const headers = { 'Authorization': `JWT ${localStorage.getItem('access_token')}` };
+      axios
+        .post("http://127.0.0.1:8000/api/stock/", data, {headers}) 
+        .then(() => {
+          console.log('주식 데이터 반영');
+        })
+        .catch((error) => {
+          let errorMsg = "";
+        });
     }
   }
 }

@@ -41,7 +41,7 @@ export default {
         });
         localStorage.setItem("access_token", response.data.access)
         // this.token = response.data.access;
-        location.href='/'
+        location.href='/index'
       } catch (error) {
         alert('로그인 실패');
         console.log(error);

@@ -167,7 +167,7 @@
     padding-left: 5px;
   }
   #top-wrapper a input {
-    margin-left: 20px;
+    margin-left: 15px;
     width: 150px;
     height: 25px;
   }
