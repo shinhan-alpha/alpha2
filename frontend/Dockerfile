@@ -2,7 +2,6 @@ FROM node:18
 
 WORKDIR /usr/src/app
 COPY vue /usr/src/app
-COPY images /usr/src/app
 
 RUN npm install
 RUN npm run build

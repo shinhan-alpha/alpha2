@@ -2,7 +2,7 @@
   <div id="login-page">
     <div class="top">
           <div class="logo">
-              <img src="../../../images/shinhan_ci.jpg">
+              <img src="../../images/shinhan_ci.jpg">
           </div>
       </div>
       <div class="main">
@@ -15,7 +15,7 @@
       </div>
       <div class="bottom">
           <div class="logo">
-              <img src="../../../images/shinhan_ad.png">
+              <img src="../../images/shinhan_ad.png">
           </div>
       </div>
   </div>

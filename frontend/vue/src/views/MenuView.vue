@@ -1,7 +1,7 @@
 <template>
     <div class="container">
       <div style="">
-        <img src="../../../images/menu_tab.png">
+        <img src="../../images/menu_tab.png">
       </div>
       <div id="menus">
         <span id="portfolio">포트폴리오</span>
