@@ -71,6 +71,8 @@
 <script>
 import axios from 'axios';
 import dividend from "@/assets/dividend_3.json"
+import stockReturn from "@/assets/stock_return_data.json"
+import corr from "@/assets/corr.json"
 import { Chart as ChartJS, ArcElement, Tooltip, Legend,Title,BarElement,CategoryScale,LinearScale } from 'chart.js'
 import { Pie, Bar } from 'vue-chartjs'
 
@@ -83,6 +85,10 @@ export default {
   },
   data() {
     return {
+      percent: '',
+      danger: '',
+      corr: corr,
+      stockReturn: stockReturn,
       dividend: dividend,
       categoryList: ['주식포트폴리오'],
       stocks: [
@@ -133,6 +139,9 @@ export default {
     }
   },
   computed:{
+    stockReturnData(){
+      this.stockReturn
+    },
       checkedStocks() {
         if(this.stocks){
           return this.stocks.filter(stock => stock.checked);
@@ -152,7 +161,8 @@ export default {
     function getValueByKey(obj, key) {
       return obj[key];
     }
-    console.log(checkedStockPrices)
+    const codeData = checkedStocks.map(data => getValueByKey(data,'code'))
+    console.log(codeData)
     const filteredData = checkedStocks.map(checkedStock => getKeyByValue(this.dividend.stock_code, checkedStock.code));
     console.log(filteredData)
     const rate = filteredData.map(data => getValueByKey(this.dividend.div_rate, data))
@@ -170,9 +180,40 @@ export default {
     }
     
     this.divs.datasets[1].data = divdata
-      
+    //percent
+    const ret = checkedStocks.map(checkedStock => getValueByKey(this.stockReturn, checkedStock.code));
+    console.log(ret)
+    const ret2 = ret.map(data => getValueByKey(data,'expected return'))
+    var retsum = 0
+    for (let s=0; s<ret2.length; s++){
+      retsum += Number(checkedStockPrices[s]/sum)*ret2[s]
+    }
+    this.percent = retsum
+    //danger
+    function transpose(matrix) {
+      return matrix[0].map((col, i) => matrix.map(row => row[i]));
+    }
+    var weights = []
+    const cor = checkedStocks.map(checkedStock => getValueByKey(this.corr, checkedStock.code));
+    var corrmat = []
+    var std_devs = ret.map(data => getValueByKey(data,'annual volatility'))
+    for (let s=0; s<checkedStockPrices.length; s++){
+      weights[s]=checkedStockPrices[s]/sum
+    }
+    console.log(cor)
+    for (let s=0; s<codeData.length; s++){
+      for (let k=0; k<codeData.length; k++){
+        corrmat.push(cor[s].map(co => getValueByKey(cor[s], cor[k])))
+      }
+    }
+    console.log(corrmat)
+    var result = []
+    for (var i = 0; i < weights.length; i++) {
+      result.push(weights[i] *std_devs[i]*std_devs[i]*100);
+    }
+    console.log(result)
     return {
-      
+
       labels: checkedStockNames,
       datasets: [
         {
