@@ -136,7 +136,6 @@ export default {
       buyPrice: this.$store.state.stock.currentPrice,
       totalPrice: '',
       openModal: false,
-      stock_code: this.$store.state.stock.stockCode,
       pk: 1,
     }
   },
@@ -167,7 +166,8 @@ export default {
         const data = {
             buy_price: this.buyPrice,
             buy_quantity: this.quantity,
-            stock_code: this.stock_code,
+            stock_code: this.stock.stockCode,
+            stock_name: this.stock.stockName,
         };
         const headers = { 'Authorization': `JWT ${localStorage.getItem('access_token')}` };
         axios
