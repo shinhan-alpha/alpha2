@@ -5,10 +5,10 @@
       <table>
           <thead>
           <tr>
-              <th>선택</th>
-              <th>종목</th>
-              <th>현재가</th>
-              <th>수량</th>
+              <th style="position: sticky; top: 0;">선택</th>
+              <th style="position: sticky; top: 0;">종목</th>
+              <th style="position: sticky; top: 0;">현재가</th>
+              <th style="position: sticky; top: 0;">수량</th>
           </tr>
           </thead>
           <tbody>
@@ -43,17 +43,15 @@
         <h2>주문금액(합계) <span id="myValue">{{checkedStockPricesSum}}</span></h2>
       </div>
       <div v-else-if="selectedTab == 'sec'">
-        <Bar :data="divs" :options="divs.options"/>
+        <Bar :data="divs" :options="divs.options" ref="barChart"/>
       </div>
       <div v-else-if="selectedTab == 'third'">
-        <div style="display:inline-block; width:100px">
+        <div style="display:inline-block; width:150px">
           <b>보유 포트폴리오</b>
           <Pie :data="chartData" :options="options"/>
         </div>
-        <div style="display:inline-block; width:100px">
-          <b>ㅁㄴㅇㄹ</b>
-        </div>
-        <div style="display:inline-block; width:100px">
+        
+        <div style="display:inline-block; width:150px">
           <b>목표 포트폴리오</b>
           <Pie :data="darts" :options="options"/>
         </div>
@@ -85,17 +83,17 @@ export default {
   },
   data() {
     return {
-      dividend: [dividend],
+      dividend: dividend,
       categoryList: ['주식포트폴리오'],
       stocks: [
+      { name: "신한지주", code: "055550", price: "39,050", quantity: 1, checked: false },
       { name: "LG전자", code: "066570", price: "113,000", quantity: 1, checked: false },
       { name: "현대차", code: "005380", price: "179,200", quantity: 1, checked: false },
       { name: "삼성전자", code: "005930", price: "62,600", quantity: 1, checked: false },
-      { name: "대우중공업", code: "042670", price: "100,000", quantity: 1, checked: false },
-      { name: "LG전자", code: "066570", price: "113,000", quantity: 1, checked: false },
-      { name: "현대차", code: "005380", price: "179,200", quantity: 1, checked: false },
-      { name: "삼성전자", code: "005930", price: "62,600", quantity: 1, checked: false },
-      { name: "대우중공업", code: "042670", price: "100,000", quantity: 1, checked: false },
+      { name: "대우중공업", code: "042670", price: "8,920", quantity: 1, checked: false },
+      { name: "SK", code: "034730", price: "183,600", quantity: 1, checked: false },
+      { name: "KT", code: "030200", price: "32,100", quantity: 1, checked: false },
+      { name: "네이버", code: "035420", price: "213,000", quantity: 1, checked: false },
       ],
       selectedTab: "first",
       divs:{
@@ -104,12 +102,12 @@ export default {
           {
             label:'배당금',
             backgroundColor: 'red',
-            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11],
+            data: [400, 200, 1200, 390, 100, 4000, 390, 800, 3000, 200, 120, 11000],
           },
           {
             label:'추가',
             backgroundColor: '#f87979',
-            data: [],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           },
         ],
         options: {
@@ -148,16 +146,38 @@ export default {
     const checkedStockPrices = checkedStocks.map(stock => Number(stock.price.replace(',', ''))*stock.quantity);
     const sum = checkedStockPrices.reduce((acc, val) => acc + val, 0);
     this.checkedStockPricesSum = sum;
-  
-    const filteredData = checkedStocks.map(checkedStock => this.dividend.find(item => item.stock_code.value === checkedStock.code));
-    
+    function getKeyByValue(obj, value) {
+      return Object.keys(obj).find(key => obj[key] === value);
+    }
+    function getValueByKey(obj, key) {
+      return obj[key];
+    }
+    console.log(checkedStockPrices)
+    const filteredData = checkedStocks.map(checkedStock => getKeyByValue(this.dividend.stock_code, checkedStock.code));
     console.log(filteredData)
+    const rate = filteredData.map(data => getValueByKey(this.dividend.div_rate, data))
+    console.log(rate)
+    const count = filteredData.map(data => getValueByKey(this.dividend.div_count, data))
+    console.log(count)
+    const month = filteredData.map(data => getValueByKey(this.dividend.div_months, data))
+    console.log(month)
+
+    const divdata = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    for (let s=0; s<checkedStockPrices.length; s++){
+      for (let i=0; i<month[s].map(str => Number(str)).length; i++){
+        divdata[month[s][i]-1] += Number(checkedStockPrices[s])*(Number(rate[s])/(Number(count[s])*100))
+      }
+    }
+    
+    this.divs.datasets[1].data = divdata
+      
     return {
+      
       labels: checkedStockNames,
       datasets: [
         {
           backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-          data: checkedStockPrices
+          data: checkedStockPrices,
         }
       ],
       checkedStockPricesSum: 0,
