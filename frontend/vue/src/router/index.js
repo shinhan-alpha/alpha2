@@ -13,7 +13,7 @@ import testView from '../views/testView.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/index',
     name: 'index',
     component: IndexView
   },
@@ -23,7 +23,7 @@ const routes = [
     component: MenuView
   },
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     component: LoginView
   },

@@ -264,6 +264,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .scrollable {
     height: 170px;

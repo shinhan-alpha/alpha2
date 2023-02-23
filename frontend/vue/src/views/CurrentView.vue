@@ -1,73 +1,69 @@
 <template>
-    <div>
-    <div class="top_nav">
-              <a href="#"><img src="../../images/arrow.png" style="float:left"></a>
-              <!-- <select id="stockList" v-model="selected">
-                  <option v-for="option in options" :value="option.price">{{ option.stock }}</option>
-              </select> -->
-              <a href="./search"><input v-model="stock.stockName"/></a> 
-              <a @click="openModal = true"><img src="../../images/cart.png"></a>
-              <a href="#"><img src="../../images/order.png"></a>
-              <a href="#"><img src="../../images/more.png"></a>
-          </div>
-          <!-- Modal -->
-          <div id="modal-container" class="black-bg" v-if="openModal == true">
-              <div class="white-bg">
-                  <div>
-                    <b>알파카트 담기 내역확인</b><br><br>
-                    계좌번호   124-124-124124<br>
-                    주문종목   LG전자(066570)<br><br>
-                </div>
-                <div>
-                    주문수량
-                    <button type="button" @click="decrementQuantity(stock)">-</button>
-                        {{ quantity }}
-                    <button type="button" @click="incrementQuantity(stock)">+</button>
-                </div>
-                <br>
-                <div>
-                  <button @click="openModal = false" class="close">취소</button>
-                  <button @click="check($event)" class="check">확인</button>
-                </div>
-              </div>
-          </div>
-          <!-- Modal -->
-          <div>
-            <div style="text-align: left;"><br><br>
-                <b>{{stock.currentPrice}}</b><br>
-                {{stock.preGap}}  {{stock.preRate}}%<br><br>
-            </div>
-            <div>
-                <div class="tabs">
-                    <div class="tab" @click="selectedTab = 'first'" :class="{ 'active': selectedTab === 'first' }">호가</div>
-                    <div class="tab" @click="selectedTab = 'sec'" :class="{ 'active': selectedTab === 'sec' }">차트</div>
-                    <div class="tab" @click="selectedTab = 'third'" :class="{ 'active': selectedTab === 'third' }">체결</div>
-                    <div class="tab" @click="selectedTab = 'fourth'" :class="{ 'active': selectedTab === 'fourth' }">일별/수급</div>
-                    <div class="tab" @click="selectedTab = 'fifth'" :class="{ 'active': selectedTab === 'fifth' }">거래원</div>
-                </div>
-                <div v-if="selectedTab == 'first'">
-                  <div>
-                    <img src="../../images/cur.png" style="width:304px; height: 350px;object-fit:cover"/>
-                  </div>
-                  <!-- <div class="container">
-                    <div class="box" v-for="(item, index) in items" :key="index">
-                      {{ item }}
-                    </div>
-                  </div> -->
-                </div>
-                <div v-if="selectedTab == 'sec'">
-                    <div ref="chart"></div>
-                </div>
-                <div v-if="selectedTab == 'third'">
-                  third
-                </div>
-                <div v-if="selectedTab == 'fourth'"></div>
-                <div v-if="selectedTab == 'fifth'"></div>
-            </div>
-          </div>
-  
+  <div>
+    <div id="top-wrapper">
+      <font-awesome-icon icon="fa-solid fa-chevron-left" onclick="window.hrf='/index"/>
+      <a href="/search"><input v-model="stock.stockName" placeholder="종목검색"/></a> 
+      <button id="cart">카트</button>
+      <button id="order">주문</button>
     </div>
-  </template>
+
+    <!-- Modal -->
+    <div class="black-bg" id="modal-container" v-if="openModal == true">
+        <div class="white-bg">
+          <div>
+              <b>알파카트 담기 내역확인</b><br><br>
+              계좌번호   124-124-124124<br>
+              주문종목   LG전자(066570)<br><br>
+          </div>
+          <div>
+              주문수량
+              <button type="button" @click="decrementQuantity(stock)">-</button>
+                  {{ quantity }}
+              <button type="button" @click="incrementQuantity(stock)">+</button>
+          </div>
+          <br>
+          <div>
+            <button @click="openModal = false" class="close">취소</button>
+            <button @click="check($event)" class="check">확인</button>
+          </div>
+        </div>
+    </div>
+    <!-- Modal -->
+
+        <div>
+          <div style="text-align: left;"><br><br>
+              <b>{{stock.currentPrice}}</b><br>
+              {{stock.preGap}}  {{stock.preRate}}%<br><br>
+          </div>
+          <div>
+              <div class="tabs">
+                  <div class="tab" @click="selectedTab = 'first'" :class="{ 'active': selectedTab === 'first' }">호가</div>
+                  <div class="tab" @click="selectedTab = 'sec'" :class="{ 'active': selectedTab === 'sec' }">차트</div>
+                  <div class="tab" @click="selectedTab = 'third'" :class="{ 'active': selectedTab === 'third' }">체결</div>
+                  <div class="tab" @click="selectedTab = 'fourth'" :class="{ 'active': selectedTab === 'fourth' }">일별/수급</div>
+                  <div class="tab" @click="selectedTab = 'fifth'" :class="{ 'active': selectedTab === 'fifth' }">거래원</div>
+              </div>
+              <div v-if="selectedTab == 'first'">
+                <div>
+                  <img src="../../../images/cur.png" style="width:304px; height: 350px;object-fit:cover"/>
+                </div>
+                <!-- <div class="container">
+                  <div class="box" v-for="(item, index) in items" :key="index">
+                    {{ item }}
+                  </div>
+                </div> -->
+              </div>
+              <div v-if="selectedTab == 'sec'">
+                  <div ref="chart"></div>
+              </div>
+              <div v-if="selectedTab == 'third'"></div>
+              <div v-if="selectedTab == 'fourth'"></div>
+              <div v-if="selectedTab == 'fifth'"></div>
+          </div>
+        </div>
+
+  </div>
+</template>
   
   <script>
   import { createChart, CrosshairMode } from 'lightweight-charts'
@@ -160,7 +156,42 @@
   
   </script>
   
-  <style scoped>
+<style scoped>
+  /* topbar */
+  #top-wrapper {
+    display: table-cell;
+    vertical-align: top;
+    text-align: left;
+    height: 30px;
+    font-size: 15px;
+    padding-left: 5px;
+  }
+  #top-wrapper a input {
+    margin-left: 15px;
+    width: 150px;
+    height: 25px;
+  }
+  #top-wrapper button {
+    margin-left: 10px;
+  }
+  #cart {
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  #order {
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  /* top */
+  .top {
+    background-color: #F8F8F8;
+  }
+
   .container {
     display: flex;
     flex-direction: column;
@@ -188,10 +219,13 @@
     padding: 10px;
     cursor: pointer;
     font-size: small;
+    font-weight: bold;
   }
   
   .tab.active {
-    background-color: #ccc;
+    background-color: white;
+    color: #D82E25;
+    border-bottom: 1px solid #D82E25;
   }
   
   .tab-content {
@@ -277,4 +311,4 @@
           .top_nav a{
               align-content: stretch;
           }
-  </style>
+</style>

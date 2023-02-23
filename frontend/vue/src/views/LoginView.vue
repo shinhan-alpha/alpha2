@@ -2,7 +2,7 @@
   <div id="login-page">
     <div class="top">
           <div class="logo">
-              <img src="../../images/shinhan_ci.jpg">
+              <img src="../../../images/shinhan_ci.jpg">
           </div>
       </div>
       <div class="main">
@@ -15,7 +15,7 @@
       </div>
       <div class="bottom">
           <div class="logo">
-              <img src="../../images/shinhan_ad.png">
+              <img src="../../../images/shinhan_ad.png">
           </div>
       </div>
   </div>
@@ -41,7 +41,7 @@ export default {
         });
         localStorage.setItem("access_token", response.data.access)
         // this.token = response.data.access;
-        location.href='/'
+        location.href='/index'
       } catch (error) {
         alert('로그인 실패');
         console.log(error);
